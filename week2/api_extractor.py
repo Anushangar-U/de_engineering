@@ -215,16 +215,12 @@ class DataValidator:
         logger.info("Starting data validation...")
         original_count = len(df)
         
-        # Check 1: Remove nulls in critical columns
         df = self._check_nulls(df)
         
-        # Check 2: Remove duplicates
         df = self._check_duplicates(df)
         
-        # Check 3: Check price range (no negative prices)
         df = self._check_price_range(df)
         
-        # Check 4: Logical check - high should be >= low
         df = self._check_high_low_logic(df)
         
         final_count = len(df)
@@ -267,8 +263,7 @@ class DataValidator:
             logger.warning(f"High/low logic check: removed {before - after} records")
         return df
 
-# Test it
-    
+
 if __name__ == "__main__":
     extractor = CryptoExtractor()
     transformer = CryptoTransformer()
