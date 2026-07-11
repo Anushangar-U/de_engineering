@@ -210,15 +210,75 @@ class CryptoLoader:
                 conn.close()
             logger.debug("Database connection closed")
 
+class DataValidator:
+    def validate(self, df):
+        logger.info("Starting data validation...")
+        original_count = len(df)
+        
+        # Check 1: Remove nulls in critical columns
+        df = self._check_nulls(df)
+        
+        # Check 2: Remove duplicates
+        df = self._check_duplicates(df)
+        
+        # Check 3: Check price range (no negative prices)
+        df = self._check_price_range(df)
+        
+        # Check 4: Logical check - high should be >= low
+        df = self._check_high_low_logic(df)
+        
+        final_count = len(df)
+        if original_count - final_count > 0:
+            logger.warning(f"Validation removed {original_count - final_count} records total")
+        
+        logger.info(f"Validation complete - {final_count} clean records remain")
+        return df
+    
+    def _check_nulls(self, df):
+        before = len(df)
+        critical_columns = ['id', 'symbol', 'current_price']
+        df = df.dropna(subset=critical_columns)
+        after = len(df)
+        if before - after > 0:
+            logger.warning(f"Null check: removed {before - after} records")
+        return df
+    
+    def _check_duplicates(self, df):
+        before = len(df)
+        df = df.drop_duplicates(subset=['id'])
+        after = len(df)
+        if before - after > 0:
+            logger.warning(f"Duplicate check: removed {before - after} records")
+        return df
+    
+    def _check_price_range(self, df):
+        before = len(df)
+        df = df[df['current_price'] > 0]
+        after = len(df)
+        if before - after > 0:
+            logger.warning(f"Price range check: removed {before - after} records with invalid price")
+        return df
+    
+    def _check_high_low_logic(self, df):
+        before = len(df)
+        df = df[df['high_24h'] >= df['low_24h']]
+        after = len(df)
+        if before - after > 0:
+            logger.warning(f"High/low logic check: removed {before - after} records")
+        return df
 
 # Test it
     
 if __name__ == "__main__":
     extractor = CryptoExtractor()
     transformer = CryptoTransformer()
+    validator = DataValidator()
     loader = CryptoLoader()
     
     raw = extractor.extract()
     if raw is not None:
         clean = transformer.transform(raw)
-        loader.load(clean)
+        validated = validator.validate(clean)
+        loader.load(validated)
+    else:
+        logger.error("Extraction failed - pipeline stopped")
