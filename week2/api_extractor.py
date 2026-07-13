@@ -9,11 +9,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from datetime import datetime
 
 # Logging setup
-os.makedirs('logs', exist_ok=True)
+os.makedirs('week2/logs', exist_ok=True)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler = logging.FileHandler('logs/api_etl.log')
+file_handler = logging.FileHandler('week2/logs/api_etl.log')
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 console_handler = logging.StreamHandler()
