@@ -9,6 +9,7 @@ import logging
 import os
 import urllib3
 import pytz
+from datetime import datetime, timedelta
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -250,22 +251,30 @@ with DAG(
 
     extract_task = PythonOperator(
         task_id='extract',
-        python_callable=extract_task_func
+        python_callable=extract_task_func,
+        retries=3,
+        retry_delay=timedelta(minutes=1)
     )
 
     transform_task = PythonOperator(
         task_id='transform',
-        python_callable=transform_task_func
+        python_callable=transform_task_func,
+        retries=3,
+        retry_delay=timedelta(minutes=1)
     )
 
     validate_task = PythonOperator(
         task_id='validate',
-        python_callable=validate_task_func
+        python_callable=validate_task_func,
+        retries=3,
+        retry_delay=timedelta(minutes=1)
     )
 
     load_task = PythonOperator(
         task_id='load',
-        python_callable=load_task_func
+        python_callable=load_task_func,
+        retries=3,
+        retry_delay=timedelta(minutes=1)
     )
 
     extract_task >> transform_task >> validate_task >> load_task
