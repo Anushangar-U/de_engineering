@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: daily_price_summary
+    description: "Daily aggregated price statistics per coin"
+    columns:
+      - name: coin_name
+        description: "Name of the cryptocurrency"
+        tests:
+          - not_null
+
+      - name: symbol
+        description: "Coin ticker symbol"
+        tests:
+          - not_null
+
+      - name: full_date
+        description: "The date this summary row represents"
+        tests:
+          - not_null
+
+      - name: avg_price
+        description: "Average price across all snapshots that day"
+        tests:
+          - not_null

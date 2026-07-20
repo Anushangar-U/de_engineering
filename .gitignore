@@ -1,0 +1,7 @@
+target/
+logs/
+dbt_packages/
+/crypto_dbt/
+*.log
+.vscode/
+*.docx
