@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw_crypto
+    schema: public
+    tables:
+      - name: factcryptoprices
+        description: "Raw hourly cryptocurrency price snapshots, loaded by the Airflow pipeline"
+
+      - name: dimcoin
+        description: "Coin dimension table, maintained via SCD Type 1 upsert"
+
+      - name: dimdate
+        description: "Pre-populated hourly date dimension"

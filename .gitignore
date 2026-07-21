@@ -5,3 +5,5 @@ dbt_packages/
 *.log
 .vscode/
 *.docx
+crypto_dbt/profiles.yml
+week5/crypto_dbt/profiles.yml
