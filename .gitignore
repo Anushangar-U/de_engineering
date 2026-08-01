@@ -7,3 +7,4 @@ dbt_packages/
 *.docx
 crypto_dbt/profiles.yml
 week5/crypto_dbt/profiles.yml
+.env
